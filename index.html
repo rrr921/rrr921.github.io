@@ -1,1 +1,98 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How do caffeine affect us?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Muli:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Arrows&family=Roboto+Slab&family=Times+New+Roman&display=swap" rel="stylesheet">
+    <script src='https://cdn.plot.ly/plotly-2.35.2.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div id="cover" class="chart-section active">
+        <h1>How do caffeine affect us?</h1>
+        <p>By GROUP 11</p>
+    </div>
+    <div id="sliderContainer">
+        <div class="sliderHead">
+            <p>More than Coffee: How CAFFEINE affect us</p>
+        </div>
+        <div class="sliderFoot">
+            <div class="sliderLeft">
+                <div class="progressAndText">
+                    <div class="caffeineDisplay">YOUR CAFFEINE CONSUMPTION:</div>
+                    <div id="controlBar">
+                        <div id="progressContainer">
+                            <div id="progressBar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="inputPart">
+                    <input type="number" id="cafInput" min="0" max="400" />
+                    <p style="margin:10px 0 0 15px;">mg/day</p>
+                </div>
+            </div>
+            <div id="beverageOptions">
+                <div class="beverage-item">
+                    <div class="beverage-detail">
+                        <!--<img src="../resources/coffee.png" alt="Coffee" class="beverage-image" />-->
+                        <p>Coffee</p>
+                    </div>
+                    <input type="number" class="quantity" id="coffee" value="0" />
+                </div>
+                <div class="beverage-item">
+                    <div class="beverage-detail">
+                        <!--<img src="../resources/coffee.png" alt="Coffee" class="beverage-image" />-->
+                        <p>Energy Drinks</p>
+                    </div>
+                    <input type="number" class="quantity" id="energyDrinks" value="0" />
+                </div>
+                <div class="beverage-item">
+                    <div class="beverage-detail">
+                        <!--<img src="../resources/coffee.png" alt="Coffee" class="beverage-image" />-->
+                        <p>Soft Drinks</p>
+                    </div>
+                    <input type="number" class="quantity" id="softDrinks" value="0" />
+                </div>
+                <div class="beverage-item">
+                    <div class="beverage-detail">
+                        <!--<img src="../resources/coffee.png" alt="Coffee" class="beverage-image" />-->
+                        <p>Other</p>
+                    </div>
+                    <input type="number" class="quantity" id="other" value="0" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="chartContainer">
+        <div id="wordCloudContainer" class="chart-section">
+            <svg id="wordCloud" width="600" height="400"></svg>
+        </div>
+        <div class="chart-section">
+            <canvas id="combinedChart" class="chart-section1" style="height: 45vh;"></canvas>
+        </div>
+        <div class="chart-section-special">
+            <canvas id="sleepScoreChart" class="chart-section2" style="height: 2vh;"></canvas>
+            <div class="stableChart"></div>
+        </div>
+        <div class="chart-section">
+            <div id="stressLevel" class="chart-section3" style="height: 45vh;"></div>
+        </div>
+        <div class="chart-section">
+            <div id="sankeyDiagram" class="chart-section4" style="height: 45vh;"></div>
+        </div>
+        <div class="chart-section">
+            <div id="sankeyDiagram2" class="chart-section5" style="height: 45vh;"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

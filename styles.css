@@ -1,0 +1,233 @@
+body {
+    background-color: #fbf7f6;
+    color: #3e2723;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+#sliderContainer {
+    background-color: #fbf7f6;
+    font-family: 'Muli', sans-serif;
+    font-weight:bolder;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    z-index: 1000; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sliderHead {
+    font-size: 20px;
+    padding-left: 10px;
+    color: #ffffff;
+    width: 100%;
+    background-color: #82464e;
+}
+
+.sliderFoot {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.sliderLeft {
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(130, 70, 78, 1);
+    width: 50%;
+}
+
+.progressAndText {
+    align-items: center;
+    justify-content: center;
+    width: 85%;
+    margin: 60px 0 0 10px;
+    margin-top: 10px;
+}
+
+.inputPart {
+    align-items: center;
+    margin: 3% 0 0 8%;
+}
+
+#cafInput {
+    font-size: 230%;
+    width: 53%;
+    height: 40%;
+}
+
+#controlBar {
+    height: 50%;
+}
+
+.caffeineDisplay {
+    margin: 3% 0 0 16%;
+    font-size: 25px;
+}
+
+#progressContainer {
+    margin: 5% 0 0 10.5%;
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 5px;
+    left: 5%;
+    background-color: #e8d6cc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+#progressBar {
+    position: absolute;
+    height: 100%;
+    background-color: #53030e;
+    transition: width 1.5s ease;
+}
+.point {
+    position: absolute;
+    width: 20px;
+    margin: 3.7% 0 0 6.5%;
+    height: 20px;
+    border-radius: 50%;
+    top: 100px;
+}
+
+#beverageOptions {
+    width: 50%;
+    box-shadow: 0 4px 8px rgba(130, 70, 78, 1);
+    margin-left: 10px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+}
+
+.beverage-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100px;
+    margin: 5px;
+}
+
+.beverage-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.beverage-display {
+    padding: 10px;
+    margin: 10vh;
+    border-radius: 5px;
+    color: black;
+    display: block;
+    line-height: 40px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.beverage-display.active {
+    transform: scale(1.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#beverageDisplayContainer {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+.quantity {
+    width: 30px;
+}
+
+.chart-section {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+#wordCloudContainer {
+    margin: 20px 0;
+    text-align: center;
+    height: 80vh;
+}
+
+.word {
+    font-family: 'Muli', sans-serif;
+    font-weight: bold;
+    fill: #3e2723;
+    transition: all 0.3s ease;
+}
+
+.chart-section1 {
+    border: #3e2723 20px;
+    margin: 50vh;
+    height: 45vh;
+}
+
+.chart-section-special {
+    height: 80vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.chart-section2 {
+    border: #3e2723 20px;
+    margin: 10vh 70vh 70vh 70vh;
+    height: 45vh;
+    
+}
+
+.stableChart {
+    height: 72vh;
+    width: 72vh;
+    margin-left: 150vh;
+    background-color: #3e2723;
+}
+
+.chart-section3 {
+    margin: 75vh;
+    height: 45vh;
+    opacity: 0;
+    transition: opacity 2s;
+}
+
+.chart-section3.visible {
+    opacity: 1;
+}
+
+#cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 101vh;
+    background: #fbf7f6;
+}
+
+.chart-description {
+    font-size: 16px;
+    color: #3e2723; 
+}
+
+#inputHint {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #3e2723; 
+    font-style: italic;
+}
+
+input[type="number"] {
+    width: 30px;
+    margin-left: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
