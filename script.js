@@ -24,17 +24,23 @@ function updateProgressBar() {
 // 先初始渲染，然后再监听
 window.onload = function () {
   updateProgressBar();
-  drawWordCloud();
+  drawBubbleChart();
 };
 cafInput.addEventListener("input", updateProgressBar);
 // 进度条部分到此为止
 
 const caffeineIntakeLabels = [0, 50, 100, 150, 200, 250, 300, 350, 400];
 const averageSleepDuration = [
-  7.4888 - 7.4712, 7.5176 - 7.4712, 7.3586 - 7.4712, 7.3743 - 7.4712, 7.4942 - 7.4712, 7.4967 - 7.4712, 8.0532 - 7.4712, 7.7307 - 7.4712,
+  7.4888 - 7.4712,
+  7.5176 - 7.4712,
+  7.3586 - 7.4712,
+  7.3743 - 7.4712,
+  7.4942 - 7.4712,
+  7.4967 - 7.4712,
+  8.0532 - 7.4712,
+  7.7307 - 7.4712,
 ];
 
-// 词云图
 const drinksData = [
   { name: "Nescafe Gold", caffeine: 26.37976039, type: "coffee" },
   {
@@ -44,8 +50,8 @@ const drinksData = [
   },
   { name: "McDonalds Iced Coffee", caffeine: 39.10669143, type: "coffee" },
   { name: "7 Eleven Brewed Coffee", caffeine: 59.17459888, type: "coffee" },
-  { name: "McDonalds (McCafe) Latte", caffeine: 30.00997515, type: "coffee" },
-  { name: "McDonalds (McCafe) Mocha", caffeine: 35.29342148, type: "coffee" },
+  { name: "McDonalds Latte", caffeine: 30.00997515, type: "coffee" },
+  { name: "McDonalds Mocha", caffeine: 35.29342148, type: "coffee" },
   {
     name: "Starbucks Caramel Macchiato",
     caffeine: 31.70067797,
@@ -93,88 +99,18 @@ const drinksData = [
   { name: "Coca-Cola Classic", caffeine: 9.580649343, type: "softDrinks" },
 ];
 
+const categoryColors = {
+  coffee: "rgba(139, 69, 19, 1)", // 棕色
+  energyDrinks: "rgba(60, 179, 113, 1)", // 中海洋绿
+  softDrinks: "rgba(70, 130, 180, 1)", // 钢蓝色
+};
 
-function getColor(drink) {
-  const minCaffeine = 5.283446329;
-  const maxCaffeine = 65.51473448;
-  const normalizedValue = 1 -
-    (drink.caffeine - minCaffeine) / (maxCaffeine - minCaffeine);
+function drawBubbleChart() {
+  const svg = d3.select("#bubbleChart");
+  const width = 1300; // 增加宽度
+  const height = 450; // 高度保持不变
 
-  const clampedValue = Math.max(0, Math.min(1, normalizedValue));
-  const colorDepth = Math.floor(clampedValue * 127);
-
-  let baseColor = `rgba(139, 69, 19, 1)`;
-  let baseFont = `'Righteous', sans-serif`;
-  // Courgette, new roman
-  // font-family: 'Muli', sans-serif;
-
-  const rgbaValues = baseColor.match(/\d+/g);
-  return `rgba(${Math.min(
-    parseInt(rgbaValues[0]) + colorDepth,
-    255
-  )}, ${Math.min(parseInt(rgbaValues[1]) + colorDepth, 255)}, ${Math.min(
-    parseInt(rgbaValues[2]) + colorDepth,
-    255
-  )}, 0.9)`;
-}
-
-
-
-function drawWordCloud() {
-  const svg = d3.select("#wordCloud");
-  const width = +svg.attr("width");
-  const height = +svg.attr("height");
-
-  svg.selectAll("*").remove();
-
-  // 创建初始单词数组，并为每个单词添加字体属性
-  const initialWords = drinksData.map((drink) => ({
-    text: drink.name,
-    size: Math.floor(Math.random() * 5) + 9,
-    color: "gray",
-  }));
-  const layout = d3.layout
-    .cloud()
-    .size([width, height])
-    .words(initialWords)
-    .padding(5)
-    .rotate(() => ~~(Math.random() * 2) * 0)
-    .fontSize((d) => d.size)
-    .on("end", draw);
-
-  layout.start();
-
-  function draw(words) {
-    const group = svg
-      .append("g")
-      .attr("transform", `translate(${width / 2},${height / 2})`);
-
-    const text = group
-      .selectAll("text")
-      .data(words)
-      .enter()
-      .append("text")
-      .style("font-size", (d) => `${d.size}px`)
-      .style("fill", (d) => d.color)
-      .attr("text-anchor", "middle")
-      .attr("transform", (d) => `translate(0, 0)`)
-      .text((d) => d.text)
-      .attr("opacity", 0);
-
-    text
-      .transition()
-      .duration(1000)
-      .attr("transform", (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
-      .attr("opacity", 1);
-  }
-}
-
-function updateWordCloud() {
-  const svg = d3.select("#wordCloud");
-  const width = +svg.attr("width");
-  const height = +svg.attr("height");
-
-  svg.selectAll("*").remove();
+  svg.attr("width", width).attr("height", height);
 
   const beverageQuantities = {
     coffee: parseInt(document.getElementById("coffee").value) || 0,
@@ -182,64 +118,145 @@ function updateWordCloud() {
     softDrinks: parseInt(document.getElementById("softDrinks").value) || 0,
   };
 
-  const words = drinksData.map((drink) => {
-    let size = Math.floor(Math.random() * 5) + 9;
-    let color = "gray";
-
-    if (beverageQuantities.coffee > 0 && drink.type === "coffee") {
-      size = Math.max(20, beverageQuantities.coffee * 5);
-      color = getColor(drink);
-    }
-
-    if (beverageQuantities.energyDrinks > 0 && drink.type === "energyDrinks") {
-      size = Math.max(20, beverageQuantities.energyDrinks * 5);
-      color = getColor(drink);
-    }
-
-    if (beverageQuantities.softDrinks > 0 && drink.type === "softDrinks") {
-      size = Math.max(20, beverageQuantities.softDrinks * 5);
-      color = getColor(drink);
-    }
+  const bubbles = drinksData.map((drink) => {
+    const size = drink.caffeine * 1.5;
+    const color = categoryColors[drink.type];
 
     return {
       text: drink.name,
       size: size,
+      caffeine: drink.caffeine,
       color: color,
+      type: drink.type,
     };
   });
 
-  const layout = d3.layout
-    .cloud()
-    .size([width, height])
-    .words(words)
-    .padding(5)
-    .rotate(() => ~~(Math.random() * 2) * 0)
-    .fontSize((d) => d.size)
-    .on("end", draw);
+  const simulation = d3
+    .forceSimulation(bubbles)
+    .force(
+      "x",
+      d3
+        .forceX()
+        .strength(0.15)
+        .x(width / 2)
+    )
+    .force(
+      "y",
+      d3
+        .forceY()
+        .strength(0.9)
+        .y(height / 2)
+    )
+    .force(
+      "collide",
+      d3.forceCollide().radius((d) => d.size + 5)
+    )
+    .on("tick", ticked);
 
-  layout.start();
-
-  function draw(words) {
-    const group = svg
-      .append("g")
-      .attr("transform", `translate(${width / 2},${height / 2})`);
-
-    const text = group
-      .selectAll("text")
-      .data(words)
-      .enter()
-      .append("text")
-      .style("font-size", (d) => `${d.size}px`)
-      .style("fill", (d) => d.color)
-      .attr("text-anchor", "middle")
-      .attr("transform", (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
-      .text((d) => d.text)
-      .attr("opacity", 0)
-      .transition()
-      .duration(750)
-      .attr("opacity", 1);
-  }
+    function ticked() {
+      const bubble = svg.selectAll("circle")
+        .data(bubbles)
+        .join("circle")
+        .attr("r", d => d.size)
+        .attr("fill", d => {
+          // 突出显示当前类别的气泡
+          if ((d.type === "coffee" && beverageQuantities.coffee > 0) ||
+            (d.type === "energyDrinks" && beverageQuantities.energyDrinks > 0) ||
+            (d.type === "softDrinks" && beverageQuantities.softDrinks > 0)) {
+            return d.color; // 突出显示
+          }
+          return 'gray';
+        })
+        .attr("opacity", 0.8)
+        .attr("cx", width / 2)
+        .attr("cy", height / 2)
+        .on("mouseover", (event, d) => {
+          const labelText = `${d.text}: ${d.caffeine} mg/100ml`;
+  
+          // 创建文本元素
+          const textElement = svg.append("text")
+            .attr("class", "bubble-label")
+            .attr("x", d.x)
+            .attr("y", d.y - (d.size * 0.2)) // 向上移动文本
+            .attr("text-anchor", "middle")
+            .attr("fill", "white") // 确保文本颜色为白色
+            .attr("font-size", '20px')
+            .text(labelText);
+          const bbox = textElement.node().getBBox();
+          svg.append("rect")
+            .attr("class", "bubble-label-bg")
+            .attr("x", bbox.x - 5)
+            .attr("y", bbox.y - 5)
+            .attr("width", bbox.width + 10)
+            .attr("height", bbox.height + 10)
+            .attr("fill", "#a35a5a")
+            .attr("opacity", 0.95)
+            .attr("border-radius",100)
+            .attr("rx", 10)
+            textElement.raise();
+        })
+        .on("mouseout", () => {
+          svg.selectAll(".bubble-label").remove();
+          svg.selectAll(".bubble-label-bg").remove();
+        });
+  
+      // 更新气泡位置
+      bubble.attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+  
+      // 添加饮料名称
+      const text = svg.selectAll("text")
+        .data(bubbles)
+        .join("text")
+        .attr("text-anchor", "middle") // 设置文本居中
+        .attr("fill", "white")
+        .attr("x", d => d.x) // 设置文本的 x 坐标为气泡的 x 坐标
+        .attr("y", d => d.y - (d.size * 0.15)) // 向上移动文本
+        .attr("font-size", d => `${d.size * 0.27}px`); // 根据气泡大小设置字体大小
+        text.selectAll("tspan")
+        .data(d => {
+          const maxCharsPerLine = 10; // 每行最大字符数
+          const words = d.text.split(" ");
+          let lines = [];
+          let currentLine = "";
+    
+          words.forEach(word => {
+            // 检查当前行加上新单词是否超过最大字符数
+            if ((currentLine + word).length > maxCharsPerLine) {
+              if (currentLine) { // 只有当前行非空时才推入
+                lines.push(currentLine.trim());
+              }
+              currentLine = word + " "; // 开始新行
+            } else {
+              currentLine += word + " ";
+            }
+          });
+    
+          // 添加最后一行，确保不添加空行
+          if (currentLine.trim()) {
+            lines.push(currentLine.trim());
+          }
+    
+          return lines;
+        })
+        .join("tspan")
+        .text(d => d)
+        .attr("x", (d, i, nodes) => {
+          const parentX = nodes[i].parentNode.getAttribute("x"); // 获取父元素的 x 坐标
+          return parentX; // 设置每行的 x 坐标为父元素的 x 坐标
+        })
+        .attr("dy", (d, i) => `${i > 0 ? 1 : 0}em`) // 设置行间距，第一行不加间距
+        .attr("font-size", d => `${d.size * 0.1}px`); // 根据气泡大小设置字体大小
+    }
 }
+
+document.getElementById("coffee").addEventListener("input", drawBubbleChart);
+document
+  .getElementById("energyDrinks")
+  .addEventListener("input", drawBubbleChart);
+document
+  .getElementById("softDrinks")
+  .addEventListener("input", drawBubbleChart);
 
 // 这两个变量用于控制chart2和chart3只创建一次
 let chart2Created = false;
@@ -265,12 +282,12 @@ function createChart1(chartId, data) {
       },
       // 添加数据标签插件配置
       datalabels: {
-        anchor: 'start',
-        align: 'start',
+        anchor: "start",
+        align: "start",
         formatter: (value) => {
           return (value + 7.4712).toFixed(2); // 显示减去 7.4712 前的数值
         },
-        color: 'black'
+        color: "black",
       },
     },
     scales: {
@@ -369,20 +386,20 @@ document.querySelectorAll(".beverage-item").forEach((item) => {
   7.4888, 7.5176, 7.3586, 7.3743, 7.4942, 7.4967, 8.0532, 7.7307,
 ];*/
 const sleepData = [
-  //{ sleepScore: 9.90, effectiveSleep: 7.4, totalSleep: 7.47, movement: 1.85 },//default
+  { sleepScore: 9.90, effectiveSleep: 7.4, totalSleep: 7.47, movement: 1.85 },//default
   { sleepScore: 7.88, effectiveSleep: 5.9, totalSleep: 7.49, movement: 2.04 },
   { sleepScore: 3.46, effectiveSleep: 2.6, totalSleep: 7.52, movement: 2.01 },
   { sleepScore: 1.22, effectiveSleep: 0.9, totalSleep: 7.36, movement: 2.03 },
-  { sleepScore: 0.95, effectiveSleep: 0.7, totalSleep: 7.37, movement: 2.00 },
+  { sleepScore: 0.95, effectiveSleep: 0.7, totalSleep: 7.37, movement: 2.0 },
   { sleepScore: 0.93, effectiveSleep: 0.7, totalSleep: 7.49, movement: 2.03 },
-  { sleepScore: 0.93, effectiveSleep: 0.7, totalSleep: 7.50, movement: 2.08 },
+  { sleepScore: 0.93, effectiveSleep: 0.7, totalSleep: 7.5, movement: 2.08 },
   { sleepScore: 0.87, effectiveSleep: 0.7, totalSleep: 8.05, movement: 1.9 },
   { sleepScore: 0.91, effectiveSleep: 0.7, totalSleep: 7.73, movement: 1.6 },
 ];
 // 这里是这样的，因为只有八组数据，在上面定义了数组，直接除以范围50，得到0-7就是数据index
 function calculateSleepData() {
   const caffeine = parseInt(document.getElementById("cafInput").value);
-  return caffeine / 50;
+  return caffeine / 50 + 1;
 }
 
 const centerTextPlugin = {
@@ -503,7 +520,6 @@ function updateChart2() {
 // 监听输入变化
 document.querySelectorAll(".quantity").forEach((input) => {
   input.addEventListener("input", () => {
-    updateWordCloud();
     updateChart2();
   });
 });
@@ -513,54 +529,62 @@ document.querySelectorAll(".quantity").forEach((input) => {
 async function createChart3() {
   var gd = document.getElementById("sankeyDiagram1");
   var categoricalDimensionLabels = [
-    'Study Hours',
-    'Caffeine Intake',
-    'Screen Time',
-    'Sleep Duration'
+    "Study Hours",
+    "Caffeine Intake",
+    "Screen Time",
+    "Sleep Duration",
   ];
 
   const data = await d3.csv("../output_file1.csv");
-  var caffeineIntake = data.map(function(row) { return row['Caffeine Intake']; });
-  var screenTime = data.map(function(row) { return row['Screen Time']; });
+  var caffeineIntake = data.map(function (row) {
+    return row["Caffeine Intake"];
+  });
+  var screenTime = data.map(function (row) {
+    return row["Screen Time"];
+  });
 
-  var categoricalDimensions = categoricalDimensionLabels.map(
-    function(dimLabel) {
-      var values = data.map(function(row) {
-        return row[dimLabel];
-      });
-
-      return {
-        values: values,
-        label: dimLabel
-      };
+  var categoricalDimensions = categoricalDimensionLabels.map(function (
+    dimLabel
+  ) {
+    var values = data.map(function (row) {
+      return row[dimLabel];
     });
 
+    return {
+      values: values,
+      label: dimLabel,
+    };
+  });
+
   var color = new Int8Array(data.length);
-  var colorscale = [[0, 'gray'], [1, 'firebrick']];
+  var colorscale = [
+    [0, "gray"],
+    [1, "firebrick"],
+  ];
 
   var layout = {
     width: 1200, // 增加宽度
     height: 600,
-    plot_bgcolor: '#fbf7f6',  // 设置图表区域背景颜色
-    paper_bgcolor: '#fbf7f6',  // 设置整个图表的背景颜色
-    xaxis: { title: { text: 'Caffeine Intake' }, domain: [0, 0.45] }, // 散点图的x轴
-    yaxis: { title: { text: 'Study Hours' }, domain: [0, 0.5] }, // 散点图的y轴
-    dragmode: 'lasso',
-    hovermode: 'closest'
+    plot_bgcolor: "#fbf7f6", // 设置图表区域背景颜色
+    paper_bgcolor: "#fbf7f6", // 设置整个图表的背景颜色
+    xaxis: { title: { text: "Caffeine Intake" }, domain: [0, 0.45] }, // 散点图的x轴
+    yaxis: { title: { text: "Study Hours" }, domain: [0, 0.5] }, // 散点图的y轴
+    dragmode: "lasso",
+    hovermode: "closest",
   };
 
   var traces = [
     {
-      type: 'scatter',
+      type: "scatter",
       x: caffeineIntake,
       y: screenTime,
-      marker: { color: 'gray' },
-      mode: 'markers',
-      xaxis: 'x', // 指定x轴
-      yaxis: 'y'   // 指定y轴
+      marker: { color: "gray" },
+      mode: "markers",
+      xaxis: "x", // 指定x轴
+      yaxis: "y", // 指定y轴
     },
     {
-      type: 'parcats',
+      type: "parcats",
       domain: { x: [0.55, 1], y: [0, 0.5] }, // 设置Sankey图的domain
       dimensions: categoricalDimensions,
       line: {
@@ -568,81 +592,89 @@ async function createChart3() {
         cmin: 0,
         cmax: 1,
         color: color,
-        shape: 'hspline'
+        shape: "hspline",
       },
       labelfont: { size: 14 },
-      selected: { 'marker': { 'color': 'firebrick' } },
-      unselected: { 'marker': { 'opacity': 0.3 } }
-    }
+      selected: { marker: { color: "firebrick" } },
+      unselected: { marker: { opacity: 0.3 } },
+    },
   ];
 
-  Plotly.newPlot('sankeyDiagram1', traces, layout);
+  Plotly.newPlot("sankeyDiagram1", traces, layout);
 
-  var update_color = function(points_data) {
+  var update_color = function (points_data) {
     var new_color = new Int8Array(data.length);
     var selection = [];
     for (var i = 0; i < points_data.points.length; i++) {
       new_color[points_data.points[i].pointNumber] = 1;
       selection.push(points_data.points[i].pointNumber);
     }
-    Plotly.restyle('sankeyDiagram1', { 'line.color': [new_color] }, 1);
+    Plotly.restyle("sankeyDiagram1", { "line.color": [new_color] }, 1);
   };
 
-  gd.on('plotly_selected', update_color);
-  gd.on('plotly_click', update_color);
+  gd.on("plotly_selected", update_color);
+  gd.on("plotly_click", update_color);
 }
 
 async function createChart4() {
   var gd = document.getElementById("sankeyDiagram2");
   var categoricalDimensionLabels = [
-    'Caffeine_Intake',
-    'Stress_Level',
-    'Sleep_Duration',
-    'Light_Exposure'
+    "Caffeine_Intake",
+    "Stress_Level",
+    "Sleep_Duration",
+    "Light_Exposure",
   ];
 
   const data = await d3.csv("../output_file2.csv");
-  var caffeineIntake = data.map(function(row) { return row['Caffeine_Intake']; });
-  var studyHours = data.map(function(row) { return row['Stress_Level']; });
+  var caffeineIntake = data.map(function (row) {
+    return row["Caffeine_Intake"];
+  });
+  var stressLevel = data.map(function (row) {
+    return row["Stress_Level"];
+  });
 
-  var categoricalDimensions = categoricalDimensionLabels.map(
-    function(dimLabel) {
-      var values = data.map(function(row) {
-        return row[dimLabel];
-      });
-
-      return {
-        values: values,
-        label: dimLabel
-      };
+  var categoricalDimensions = categoricalDimensionLabels.map(function (
+    dimLabel
+  ) {
+    var values = data.map(function (row) {
+      return row[dimLabel];
     });
 
+    return {
+      values: values,
+      label: dimLabel,
+    };
+  });
+
   var color = new Int8Array(data.length);
-  var colorscale = [[0, 'gray'], [1, 'firebrick']];
+  var colorscale = [
+    [0, "gray"],
+    [1, "firebrick"],
+  ];
 
   var layout = {
-    width: 1200, // 增加宽度
+    width: 1200,
     height: 600,
-    plot_bgcolor: '#fbf7f6',  // 设置图表区域背景颜色
-    paper_bgcolor: '#fbf7f6',  // 设置整个图表的背景颜色
-    xaxis: { title: { text: 'Caffeine Intake' }, domain: [0, 0.45] }, // 散点图的x轴
-    yaxis: { title: { text: 'Study Hours' }, domain: [0, 0.5] }, // 散点图的y轴
-    dragmode: 'lasso',
-    hovermode: 'closest'
+    plot_bgcolor: "#fbf7f6",
+    paper_bgcolor: "#fbf7f6",
+    xaxis: { title: { text: "Caffeine Intake" }, domain: [0, 0.45] },
+    yaxis: { title: { text: "Study Hours" }, domain: [0, 0.5] },
+    dragmode: "lasso",
+    hovermode: "closest",
   };
 
   var traces = [
     {
-      type: 'scatter',
+      type: "scatter",
       x: caffeineIntake,
-      y: studyHours,
-      marker: { color: 'gray' },
-      mode: 'markers',
-      xaxis: 'x', // 指定x轴
-      yaxis: 'y'   // 指定y轴
+      y: stressLevel,
+      marker: { color: "gray" },
+      mode: "markers",
+      xaxis: "x", // 指定x轴
+      yaxis: "y", // 指定y轴
     },
     {
-      type: 'parcats',
+      type: "parcats",
       domain: { x: [0.55, 1], y: [0, 0.5] }, // 设置Sankey图的domain
       dimensions: categoricalDimensions,
       line: {
@@ -650,31 +682,31 @@ async function createChart4() {
         cmin: 0,
         cmax: 1,
         color: color,
-        shape: 'hspline'
+        shape: "hspline",
       },
       labelfont: { size: 14 },
-      selected: { 'marker': { 'color': 'firebrick' } },
-      unselected: { 'marker': { 'opacity': 0.3 } }
-    }
+      selected: { marker: { color: "firebrick" } },
+      unselected: { marker: { opacity: 0.3 } },
+    },
   ];
 
-  Plotly.newPlot('sankeyDiagram2', traces, layout);
+  Plotly.newPlot("sankeyDiagram2", traces, layout);
 
-  var update_color = function(points_data) {
+  var update_color = function (points_data) {
     var new_color = new Int8Array(data.length);
     var selection = [];
     for (var i = 0; i < points_data.points.length; i++) {
       new_color[points_data.points[i].pointNumber] = 1;
       selection.push(points_data.points[i].pointNumber);
     }
-    Plotly.restyle('sankeyDiagram2', { 'line.color': [new_color] }, 1);
+    Plotly.restyle("sankeyDiagram2", { "line.color": [new_color] }, 1);
   };
 
-  gd.on('plotly_selected', update_color);
-  gd.on('plotly_click', update_color);
+  gd.on("plotly_selected", update_color);
+  gd.on("plotly_click", update_color);
 }
 
-let wordCloudUpdated = false;
+let bubbleUpdated = false;
 // 监听滚动事件
 window.addEventListener("scroll", () => {
   const cover = document.getElementById("cover");
@@ -688,12 +720,12 @@ window.addEventListener("scroll", () => {
     cover.classList.remove("hidden");
   }
 
-  const wordCloud = document.getElementById("wordCloud");
-  const cloudRect = wordCloud.getBoundingClientRect();
-  console.log(cloudRect.top)
-  if (cloudRect.top < 270 && !wordCloudUpdated) {
-    wordCloudUpdated = true;
-    updateWordCloud();
+  const wordBubble = document.getElementById("bubbleChart");
+  const bubbleRect = wordBubble.getBoundingClientRect();
+  console.log(bubbleRect.top);
+  if (bubbleRect.top < 270 && !bubbleUpdated) {
+    bubbleUpdated = true;
+    drawBubbleChart();
   }
   const chart1 = document.getElementById("combinedChart");
   const chartRect1 = chart1.getBoundingClientRect();
@@ -709,7 +741,5 @@ window.addEventListener("scroll", () => {
   if (chartRect2.top < 377 && !chart2Created) {
     chart2Created = true;
     createChart2();
-
   }
-
 });
