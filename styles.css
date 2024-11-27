@@ -192,14 +192,7 @@ body {
 }
 
 .chart-section3 {
-    margin: 75vh;
-    height: 45vh;
-    opacity: 0;
-    transition: opacity 2s;
-}
-
-.chart-section3.visible {
-    opacity: 1;
+    z-index: 100;
 }
 
 #cover {

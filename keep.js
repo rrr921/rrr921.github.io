@@ -251,7 +251,7 @@ const invertedSleepDuration = averageSleepDuration.map(
 let caffeineValue = 0;
 let totalCaffeine = 0;
 
-//Chart.register(ChartDataLabels);
+Chart.register(ChartDataLabels);
 
 // 创建第一个图表
 function createChart1(chartId, data) {
@@ -518,13 +518,14 @@ async function createChart3() {
     'Screen Time',
     'Sleep Duration'
   ];
-
   const data = await d3.csv("../output_file1.csv");
-  var caffeineIntake = data.map(function(row) { return row['Caffeine Intake']; });
-  var screenTime = data.map(function(row) { return row['Screen Time']; });
+
+  var caffeineIntake = data.map(function(row) { return row['Caffeine_Intake']; });
+  var studyHours = data.map(function(row) { return row['Study_Hours']; });
 
   var categoricalDimensions = categoricalDimensionLabels.map(
     function(dimLabel) {
+      // Extract column
       var values = data.map(function(row) {
         return row[dimLabel];
       });
@@ -534,34 +535,29 @@ async function createChart3() {
         label: dimLabel
       };
     });
-
   var color = new Int8Array(data.length);
   var colorscale = [[0, 'gray'], [1, 'firebrick']];
-
   var layout = {
-    width: 1200, // 增加宽度
-    height: 600,
-    plot_bgcolor: '#fbf7f6',  // 设置图表区域背景颜色
-    paper_bgcolor: '#fbf7f6',  // 设置整个图表的背景颜色
-    xaxis: { title: { text: 'Caffeine Intake' }, domain: [0, 0.45] }, // 散点图的x轴
-    yaxis: { title: { text: 'Study Hours' }, domain: [0, 0.5] }, // 散点图的y轴
+    width: 600,
+    height: 800,
+    xaxis: { title: { text: 'Caffeine Intake' } },
+    yaxis: { domain: [0.6, 1], title: { text: 'Study Hours' } },
     dragmode: 'lasso',
     hovermode: 'closest'
   };
-
   var traces = [
     {
       type: 'scatter',
       x: caffeineIntake,
-      y: screenTime,
+      y: studyHours,
       marker: { color: 'gray' },
       mode: 'markers',
-      xaxis: 'x', // 指定x轴
-      yaxis: 'y'   // 指定y轴
+      selected: { 'marker': { 'color': 'firebrick' } },
+      unselected: { 'marker': { 'opacity': 0.3 } }
     },
     {
       type: 'parcats',
-      domain: { x: [0.55, 1], y: [0, 0.5] }, // 设置Sankey图的domain
+      domain: { y: [0, 0.4] },
       dimensions: categoricalDimensions,
       line: {
         colorscale: colorscale,
@@ -570,14 +566,10 @@ async function createChart3() {
         color: color,
         shape: 'hspline'
       },
-      labelfont: { size: 14 },
-      selected: { 'marker': { 'color': 'firebrick' } },
-      unselected: { 'marker': { 'opacity': 0.3 } }
+      labelfont: { size: 14 }
     }
   ];
-
   Plotly.newPlot('sankeyDiagram1', traces, layout);
-
   var update_color = function(points_data) {
     var new_color = new Int8Array(data.length);
     var selection = [];
