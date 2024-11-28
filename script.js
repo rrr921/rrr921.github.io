@@ -3,6 +3,21 @@ const cafInput = document.getElementById("cafInput");
 const progressBar = document.getElementById("progressBar");
 const progressContainer = document.getElementById("progressContainer");
 const controlBar = document.getElementById("controlBar");
+
+function updateImageBorders() {
+  const images = document.querySelectorAll('.grid-item');
+  const caffeineValue = parseInt(cafInput.value);
+  const calculatedIndex = Math.floor(caffeineValue / 50);
+
+  images.forEach((img, index) => {
+      if (index === calculatedIndex) {
+          img.style.border = "2px solid brown";
+      } else {
+          img.style.border = "none";
+      }
+  });
+}
+
 function updateProgressBar() {
   const inputValue = Math.min(Math.max(cafInput.value, 0), 400);
   progressBar.style.width = inputValue + "px";
@@ -20,6 +35,7 @@ function updateProgressBar() {
     }
     controlBar.appendChild(point);
   }
+  updateImageBorders();
 }
 // 先初始渲染，然后再监听
 window.onload = function () {
@@ -100,15 +116,15 @@ const drinksData = [
 ];
 
 const categoryColors = {
-  coffee: "rgba(139, 69, 19, 1)", // 棕色
-  energyDrinks: "rgba(60, 179, 113, 1)", // 中海洋绿
-  softDrinks: "rgba(70, 130, 180, 1)", // 钢蓝色
+  coffee: "rgba(139, 69, 19, 1)",
+  energyDrinks: "rgba(60, 179, 113, 1)",
+  softDrinks: "rgba(70, 130, 180, 1)",
 };
 
 function drawBubbleChart() {
   const svg = d3.select("#bubbleChart");
-  const width = 1300; // 增加宽度
-  const height = 450; // 高度保持不变
+  const width = 1300;
+  const height = 450;
 
   svg.attr("width", width).attr("height", height);
 
@@ -163,7 +179,7 @@ function drawBubbleChart() {
           if ((d.type === "coffee" && beverageQuantities.coffee > 0) ||
             (d.type === "energyDrinks" && beverageQuantities.energyDrinks > 0) ||
             (d.type === "softDrinks" && beverageQuantities.softDrinks > 0)) {
-            return d.color; // 突出显示
+            return d.color;
           }
           return 'gray';
         })
@@ -172,14 +188,13 @@ function drawBubbleChart() {
         .attr("cy", height / 2)
         .on("mouseover", (event, d) => {
           const labelText = `${d.text}: ${d.caffeine} mg/100ml`;
-  
-          // 创建文本元素
+
           const textElement = svg.append("text")
             .attr("class", "bubble-label")
             .attr("x", d.x)
-            .attr("y", d.y - (d.size * 0.2)) // 向上移动文本
+            .attr("y", d.y - (d.size * 0.2))
             .attr("text-anchor", "middle")
-            .attr("fill", "white") // 确保文本颜色为白色
+            .attr("fill", "white")
             .attr("font-size", '20px')
             .text(labelText);
           const bbox = textElement.node().getBBox();
@@ -189,7 +204,7 @@ function drawBubbleChart() {
             .attr("y", bbox.y - 5)
             .attr("width", bbox.width + 10)
             .attr("height", bbox.height + 10)
-            .attr("fill", "#a35a5a")
+            .attr("fill", "#824a4a")
             .attr("opacity", 0.95)
             .attr("border-radius",100)
             .attr("rx", 10)
@@ -357,9 +372,9 @@ function updateChart1() {
 }
 
 const caffeineAmountMap = {
-  coffee: 34,
-  cola: 30,
-  redBull: 80,
+  coffee: 150,
+  energyDrinks: 100,
+  softDrinks: 30,
 };
 
 document.querySelectorAll(".beverage-item").forEach((item) => {
@@ -472,7 +487,7 @@ function createChart2() {
       },
       title: {
         display: true,
-        text: "Sleep score/quality",
+        text: "Sleep quality",
       },
       tooltip: {
         callbacks: {
@@ -563,14 +578,22 @@ async function createChart3() {
   ];
 
   var layout = {
-    width: 1200, // 增加宽度
+    width: 1200,
     height: 600,
-    plot_bgcolor: "#fbf7f6", // 设置图表区域背景颜色
-    paper_bgcolor: "#fbf7f6", // 设置整个图表的背景颜色
-    xaxis: { title: { text: "Caffeine Intake" }, domain: [0, 0.45] }, // 散点图的x轴
-    yaxis: { title: { text: "Study Hours" }, domain: [0, 0.5] }, // 散点图的y轴
+    plot_bgcolor: "#fbf7f6",
+    paper_bgcolor: "#fbf7f6",
+    xaxis: { title: { text: "Caffeine Intake" }, domain: [0, 0.45] },
+    yaxis: { title: { text: "Study Hours" }, domain: [0, 0.5] },
     dragmode: "lasso",
     hovermode: "closest",
+    title: {
+      text: "Try to interact with the diagrams below!",
+      font: {
+        size: 20
+      },
+      x: 0.5,
+      xanchor: 'center'
+    }
   };
 
   var traces = [
@@ -722,15 +745,14 @@ window.addEventListener("scroll", () => {
 
   const wordBubble = document.getElementById("bubbleChart");
   const bubbleRect = wordBubble.getBoundingClientRect();
-  console.log(bubbleRect.top);
   if (bubbleRect.top < 270 && !bubbleUpdated) {
     bubbleUpdated = true;
     drawBubbleChart();
   }
   const chart1 = document.getElementById("combinedChart");
   const chartRect1 = chart1.getBoundingClientRect();
-  //console.log(chartRect1.top)
-  if (chartRect1.top < 280) {
+  console.log(chartRect1.top)
+  if (chartRect1.top < 330) {
     updateChart1();
     createChart3();
     createChart4();
@@ -738,7 +760,8 @@ window.addEventListener("scroll", () => {
 
   const chart2 = document.getElementById("sleepScoreChart");
   const chartRect2 = chart2.getBoundingClientRect();
-  if (chartRect2.top < 377 && !chart2Created) {
+  console.log(chartRect2.top)
+  if (chartRect2.top < 240 && !chart2Created) {
     chart2Created = true;
     createChart2();
   }

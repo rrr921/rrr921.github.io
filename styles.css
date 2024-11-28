@@ -161,8 +161,8 @@ body {
 
 .chart-section1 {
     border: #3e2723 20px;
-    margin: 50vh;
-    height: 45vh;
+    margin: 30vh 0 50vh 30vh; 
+    height: 10vh;
 }
 
 .chart-section-special {
@@ -173,9 +173,28 @@ body {
 
 .chart-section2 {
     border: #3e2723 20px;
-    margin: 10vh 70vh 70vh 70vh;
-    height: 45vh;
-    
+    margin: 80vh 3vh 40vh 10vh;
+    height: 90vh;
+    width: 60vh;
+}
+
+.grid1 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    width: 60vh;
+    height: 55vh;
+    margin-left: 5vh;
+}
+
+.grid-item {
+    background-color: lightblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #cfc2c2;
+    font-size: 24px;
 }
 
 #bubbleChart {
