@@ -7,8 +7,7 @@ const controlBar = document.getElementById("controlBar");
 function updateImageBorders() {
   const images = document.querySelectorAll('.grid-item');
   const caffeineValue = parseInt(cafInput.value);
-  const calculatedIndex = Math.floor(caffeineValue / 50);
-
+  const calculatedIndex = Math.floor(caffeineValue / 50) + 1;
   images.forEach((img, index) => {
       if (index === calculatedIndex) {
           img.style.border = "2px solid brown";
