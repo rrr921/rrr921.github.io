@@ -8,6 +8,9 @@ function updateImageBorders() {
   const images = document.querySelectorAll('.grid-item');
   const caffeineValue = parseInt(cafInput.value);
   const calculatedIndex = Math.floor(caffeineValue / 50) + 1;
+  if(caffeineValue === 0) {
+    calculatedIndex = 0;
+  }
   images.forEach((img, index) => {
       if (index === calculatedIndex) {
           img.style.border = "2px solid brown";
@@ -293,6 +296,9 @@ function createChart1(chartId, data) {
       title: {
         display: true,
         text: "Average Sleep Duration vs Caffeine Intake",
+        font: {
+        size: 18,
+      },
       },
       // 添加数据标签插件配置
       datalabels: {
@@ -438,8 +444,6 @@ const centerTextPlugin = {
 // 创建图表的函数
 function createChart2() {
   const idx = Math.floor(calculateSleepData()) || 0;
-  console.log("Creating Chart 2 with index:", idx);
-  console.log("Sleep Data:", sleepData[idx]);
   const ctx = document.getElementById("sleepScoreChart").getContext("2d");
   const data = {
     datasets: [
@@ -482,11 +486,13 @@ function createChart2() {
     plugins: {
       legend: {
         display: true,
-        position: "top",
       },
       title: {
         display: true,
         text: "Sleep quality",
+        font: {
+          size: 24,
+        },
       },
       tooltip: {
         callbacks: {
@@ -641,18 +647,17 @@ async function createChart3() {
 async function createChart4() {
   var gd = document.getElementById("sankeyDiagram2");
   var categoricalDimensionLabels = [
-    "Caffeine_Intake",
-    "Stress_Level",
-    "Sleep_Duration",
-    "Light_Exposure",
+    "Caffeine Intake",
+    "Stress Level",
+    "Sleep Duration",
   ];
 
   const data = await d3.csv("../output_file2.csv");
   var caffeineIntake = data.map(function (row) {
-    return row["Caffeine_Intake"];
+    return row["Caffeine Intake"];
   });
   var stressLevel = data.map(function (row) {
-    return row["Stress_Level"];
+    return row["Stress Level"];
   });
 
   var categoricalDimensions = categoricalDimensionLabels.map(function (
@@ -680,7 +685,7 @@ async function createChart4() {
     plot_bgcolor: "#fbf7f6",
     paper_bgcolor: "#fbf7f6",
     xaxis: { title: { text: "Caffeine Intake" }, domain: [0, 0.45] },
-    yaxis: { title: { text: "Study Hours" }, domain: [0, 0.5] },
+    yaxis: { title: { text: "Stress Level" }, domain: [0, 0.5] },
     dragmode: "lasso",
     hovermode: "closest",
   };
