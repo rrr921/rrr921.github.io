@@ -1,8 +1,8 @@
 // 进度条部分从这里开始
-const cafInput = document.getElementById("cafInput");
-const progressBar = document.getElementById("progressBar");
-const progressContainer = document.getElementById("progressContainer");
-const controlBar = document.getElementById("controlBar");
+const cafInput = document.getElementById("caf-input");
+const progressBar = document.getElementById("progress-bar");
+const progressContainer = document.getElementById("progress-container");
+const controlBar = document.getElementById("control-bar");
 
 function updateImageBorders() {
   const images = document.querySelectorAll('.grid-item');
@@ -124,7 +124,7 @@ const categoryColors = {
 };
 
 function drawBubbleChart() {
-  const svg = d3.select("#bubbleChart");
+  const svg = d3.select("#bubble-chart");
   const width = 1300;
   const height = 450;
 
@@ -287,8 +287,8 @@ let totalCaffeine = 0;
 
 //Chart.register(ChartDataLabels);
 
-// 创建第一个图表
-function createChart1(chartId, data) {
+// 创建第一个图表 bar chart
+function createBarChart(chartId, data) {
   const options = {
     responsive: true,
     plugins: {
@@ -350,10 +350,10 @@ const chartData1 = {
   ],
 };
 
-const sleepDurationChart = createChart1("combinedChart", chartData1);
+const sleepDurationChart = createBarChart("bar-chart", chartData1);
 
-function updateChart1() {
-  const caffeine = parseInt(document.getElementById("cafInput").value);
+function updateBarChart() {
+  const caffeine = parseInt(document.getElementById("caf-input").value);
   if (caffeine !== null && caffeine >= 0) {
     const index = caffeineIntakeLabels.findIndex((label) => label > caffeine);
     sleepDurationChart.data.datasets[0].backgroundColor =
@@ -396,7 +396,7 @@ document.querySelectorAll(".beverage-item").forEach((item) => {
       return total + inputValue * caffeineAmountMap[type];
     }, 0);
     caffeineValue = totalCaffeine;
-    document.getElementById("cafInput").value = totalCaffeine;
+    document.getElementById("caf-input").value = totalCaffeine;
     updateProgressBar();
   });
 });
@@ -418,7 +418,7 @@ const sleepData = [
 ];
 // 这里是这样的，因为只有八组数据，在上面定义了数组，直接除以范围50，得到0-7就是数据index
 function calculateSleepData() {
-  const caffeine = parseInt(document.getElementById("cafInput").value);
+  const caffeine = parseInt(document.getElementById("caf-input").value);
   return caffeine / 50 + 1;
 }
 
@@ -444,7 +444,7 @@ const centerTextPlugin = {
 // 创建图表的函数
 function createChart2() {
   const idx = Math.floor(calculateSleepData()) || 0;
-  const ctx = document.getElementById("sleepScoreChart").getContext("2d");
+  const ctx = document.getElementById("pie-chart").getContext("2d");
   const data = {
     datasets: [
       {
@@ -515,7 +515,7 @@ function createChart2() {
 // 更新图表的函数
 function updateChart2() {
   const idx = Math.floor(calculateSleepData());
-  const chart = Chart.getChart("sleepScoreChart");
+  const chart = Chart.getChart("pie-chart");
 
   if (chart) {
     chart.data.datasets[0].data = [
@@ -547,7 +547,7 @@ document.querySelectorAll(".quantity").forEach((input) => {
 // chart2到此结束
 
 async function createChart3() {
-  var gd = document.getElementById("sankeyDiagram1");
+  var gd = document.getElementById("sankey-diagram1");
   var categoricalDimensionLabels = [
     "Study Hours",
     "Caffeine Intake",
@@ -555,7 +555,7 @@ async function createChart3() {
     "Sleep Duration",
   ];
 
-  const data = await d3.csv("../output_file1.csv");
+  const data = await d3.csv("./assets/data/sankey1.csv");
   var caffeineIntake = data.map(function (row) {
     return row["Caffeine Intake"];
   });
@@ -628,7 +628,7 @@ async function createChart3() {
     },
   ];
 
-  Plotly.newPlot("sankeyDiagram1", traces, layout);
+  Plotly.newPlot("sankey-diagram1", traces, layout);
 
   var update_color = function (points_data) {
     var new_color = new Int8Array(data.length);
@@ -637,7 +637,7 @@ async function createChart3() {
       new_color[points_data.points[i].pointNumber] = 1;
       selection.push(points_data.points[i].pointNumber);
     }
-    Plotly.restyle("sankeyDiagram1", { "line.color": [new_color] }, 1);
+    Plotly.restyle("sankey-diagram1", { "line.color": [new_color] }, 1);
   };
 
   gd.on("plotly_selected", update_color);
@@ -645,14 +645,14 @@ async function createChart3() {
 }
 
 async function createChart4() {
-  var gd = document.getElementById("sankeyDiagram2");
+  var gd = document.getElementById("sankey-diagram2");
   var categoricalDimensionLabels = [
     "Caffeine Intake",
     "Stress Level",
     "Sleep Duration",
   ];
 
-  const data = await d3.csv("../output_file2.csv");
+  const data = await d3.csv("./assets/data/sankey2.csv");
   var caffeineIntake = data.map(function (row) {
     return row["Caffeine Intake"];
   });
@@ -717,7 +717,7 @@ async function createChart4() {
     },
   ];
 
-  Plotly.newPlot("sankeyDiagram2", traces, layout);
+  Plotly.newPlot("sankey-diagram2", traces, layout);
 
   var update_color = function (points_data) {
     var new_color = new Int8Array(data.length);
@@ -726,7 +726,7 @@ async function createChart4() {
       new_color[points_data.points[i].pointNumber] = 1;
       selection.push(points_data.points[i].pointNumber);
     }
-    Plotly.restyle("sankeyDiagram2", { "line.color": [new_color] }, 1);
+    Plotly.restyle("sankey-diagram2", { "line.color": [new_color] }, 1);
   };
 
   gd.on("plotly_selected", update_color);
@@ -747,22 +747,21 @@ window.addEventListener("scroll", () => {
     cover.classList.remove("hidden");
   }
 
-  const wordBubble = document.getElementById("bubbleChart");
+  const wordBubble = document.getElementById("bubble-chart");
   const bubbleRect = wordBubble.getBoundingClientRect();
   if (bubbleRect.top < 270 && !bubbleUpdated) {
     bubbleUpdated = true;
     drawBubbleChart();
   }
-  const chart1 = document.getElementById("combinedChart");
-  const chartRect1 = chart1.getBoundingClientRect();
-  console.log(chartRect1.top)
-  if (chartRect1.top < 330) {
-    updateChart1();
+  const barChart = document.getElementById("bar-chart");
+  const barChartRect = barChart.getBoundingClientRect();
+  if (barChartRect.top < 330) {
+    updateBarChart();
     createChart3();
     createChart4();
   }
 
-  const chart2 = document.getElementById("sleepScoreChart");
+  const chart2 = document.getElementById("pie-chart");
   const chartRect2 = chart2.getBoundingClientRect();
   console.log(chartRect2.top)
   if (chartRect2.top < 240 && !chart2Created) {

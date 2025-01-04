@@ -5,7 +5,24 @@ body {
     overflow-x: hidden;
 }
 
-#sliderContainer {
+#cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 101vh;
+    background: #fbf7f6;
+}
+
+.chart-section {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+#slider-container {
     background-color: #fbf7f6;
     font-family: 'Muli', sans-serif;
     font-weight:bolder;
@@ -20,7 +37,7 @@ body {
     align-items: center;
 }
 
-.sliderHead {
+.slider-head {
     font-size: 20px;
     padding-left: 10px;
     color: #ffffff;
@@ -28,14 +45,14 @@ body {
     background-color: #82464e;
 }
 
-.sliderFoot {
+.slider-foot {
     display: flex;
     flex-direction: row;
     margin-top: 5px;
     width: 100%;
 }
 
-.sliderLeft {
+.slider-left {
     display: flex;
     flex-direction: row;
     background-color: #ffffff;
@@ -43,7 +60,7 @@ body {
     width: 50%;
 }
 
-.progressAndText {
+.progress-text {
     align-items: center;
     justify-content: center;
     width: 85%;
@@ -51,27 +68,16 @@ body {
     margin-top: 10px;
 }
 
-.inputPart {
-    align-items: center;
-    margin: 3% 0 0 8%;
-}
-
-#cafInput {
-    font-size: 230%;
-    width: 53%;
-    height: 40%;
-}
-
-#controlBar {
-    height: 50%;
-}
-
-.caffeineDisplay {
+.caffeine-display {
     margin: 3% 0 0 16%;
     font-size: 25px;
 }
 
-#progressContainer {
+#control-bar {
+    height: 50%;
+}
+
+#progress-container {
     margin: 5% 0 0 10.5%;
     position: relative;
     width: 100%;
@@ -82,12 +88,34 @@ body {
     border-radius: 5px;
     overflow: hidden;
 }
-#progressBar {
+
+#progress-bar {
     position: absolute;
     height: 100%;
     background-color: #53030e;
     transition: width 1.5s ease;
 }
+
+.input-part {
+    align-items: center;
+    margin: 3% 0 0 8%;
+}
+
+input[type="number"] {
+    width: 30px;
+    margin-left: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#caf-input {
+    font-size: 230%;
+    width: 53%;
+    height: 40%;
+}
+
+/* 这个point是给进度条的加点，在js里处理*/
 .point {
     position: absolute;
     width: 20px;
@@ -97,7 +125,7 @@ body {
     top: 100px;
 }
 
-#beverageOptions {
+#beverage-options {
     width: 50%;
     box-shadow: 0 4px 8px rgba(130, 70, 78, 1);
     margin-left: 10px;
@@ -119,66 +147,30 @@ body {
     flex-direction: column;
 }
 
-.beverage-display {
-    padding: 10px;
-    margin: 10vh;
-    border-radius: 5px;
-    color: black;
-    display: block;
-    line-height: 40px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.beverage-display.active {
-    transform: scale(1.2);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-#beverageDisplayContainer {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 20px 0;
-}
 .quantity {
     width: 30px;
 }
 
-.chart-section {
-    height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
+.bar-chart-text {
+    margin-right: 1vh;
+    font: 20px;
 }
 
-.word {
-    font-family: 'Muli', sans-serif;
-    font-weight: bold;
-    fill: #3e2723;
-    transition: all 0.3s ease;
-}
-
-.chart-section1 {
+.caffeine-sleep-chart {
     border: #3e2723 20px;
     margin: 30vh 0 50vh 30vh; 
     height: 10vh;
 }
 
-.chart-section-special {
-    height: 80vh;
-    display: flex;
-    flex-direction: row;
+#bar-chart {
+    height: 45vh;
 }
 
-.chart-section2 {
-    border: #3e2723 20px;
-    margin: 80vh 3vh 40vh 10vh;
-    height: 90vh;
-    width: 60vh;
+.pie-chart-text {
+    width: 40vh;
 }
 
-.grid1 {
+.grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
@@ -195,51 +187,21 @@ body {
     justify-content: center;
     border: 1px solid #cfc2c2;
     font-size: 24px;
+    width: 20vh;
 }
 
-#bubbleChart {
-    height: 80%;
-    width: 100%;
-    margin-left: 14vh;
+.pie-chart-section {
+    border: #3e2723 20px;
+    margin: 80vh 3vh 40vh 10vh;
+    height: 90vh;
+    width: 60vh;
 }
 
-.stableChart {
-    height: 72vh;
-    width: 72vh;
-    margin-left: 150vh;
-    background-color: #3e2723;
-}
-
-.chart-section3 {
+#sankey-diagram1 {
+    height: 45vh;
     z-index: 100;
 }
 
-#cover {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 101vh;
-    background: #fbf7f6;
-}
-
-.chart-description {
-    font-size: 16px;
-    color: #3e2723; 
-}
-
-#inputHint {
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 12px;
-    color: #3e2723; 
-    font-style: italic;
-}
-
-input[type="number"] {
-    width: 30px;
-    margin-left: 10px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+#sankey-diagram2 {
+    height: 45vh;
 }
